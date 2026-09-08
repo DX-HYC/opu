@@ -1,0 +1,34 @@
+{
+  "name": "auto-video-player",
+  "displayName": "Auto Video Player",
+  "tagline": "网课自动续播与连播浏览器扩展",
+  "description": "基于 Chromium 内核的浏览器扩展，部署在中国在线学习平台，针对多 iframe 课件目录架构实现自动播放控制：自动恢复暂停的视频、自动跳转到下一个视频，实现无人值守连播。",
+  "features": [
+    "自动恢复暂停的视频播放",
+    "自动跳转到下一个视频并连播",
+    "跨多 iframe 课件目录识别视频状态（currentTime / duration）",
+    "Chrome / Edge Manifest V3 适配"
+  ],
+  "techStack": ["Browser Extension", "Manifest V3", "JavaScript"],
+  "license": "MIT",
+  "topics": ["chrome-extension", "edge-extension", "video", "automation", "elearning"],
+  "platforms": {
+    "github": { "owner": "2657449167", "repo": "auto-video-player", "visibility": "public" },
+    "gitee":  { "owner": "hu_yu_chen", "repo": "auto-video-player", "visibility": "public" }
+  },
+  "entryPoints": [
+    "打开浏览器扩展管理页（chrome://extensions 或 edge://extensions）",
+    "开启右上角「开发者模式」",
+    "点击「加载已解压的扩展程序」，选择本项目根目录",
+    "在目标学习平台打开课件，扩展会自动接管视频播放"
+  ],
+  "requirements": {},
+  "ai": {
+    "enabled": true,
+    "extraContext": "这是一个部署在网梯/whaty 平台（jxzj-kfkc.webtrn.cn）的课件自动播放扩展，面向需要批量刷课的学习者。"
+  },
+  "docs": {
+    "readme": "",
+    "tutorial": ""
+  }
+}

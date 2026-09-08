@@ -1,0 +1,12 @@
+# 依赖（用 npm 安装，不要提交）
+node_modules/
+
+# 运行产物
+.opu.json
+*.log
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

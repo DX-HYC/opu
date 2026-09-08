@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>开源项目自动化提交程序 · 可视化控制台</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">opu</div>
+        <div class="brand-text">
+          <div class="brand-title">开源自动化发布</div>
+          <div class="brand-sub">GitHub / Gitee 一键发布</div>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-view="publish"><span class="ico">🚀</span> 发布项目</button>
+        <button class="nav-item" data-view="config"><span class="ico">⚙️</span> 全局配置</button>
+        <button class="nav-item" data-view="doctor"><span class="ico">🩺</span> 环境检查</button>
+      </nav>
+      <div class="sidebar-foot">本地运行 · 仅绑定 127.0.0.1</div>
+    </aside>
+
+    <main class="main">
+      <!-- 发布 -->
+      <section class="view active" id="view-publish">
+        <header class="view-head">
+          <h1>发布项目到 GitHub / Gitee</h1>
+          <p>选择项目目录 → 自动识别技术栈 → 编辑信息 → 生成文档 → 一键发布</p>
+        </header>
+
+        <div class="card">
+          <div class="card-title">① 选择项目目录</div>
+          <div class="row">
+            <input id="dirInput" class="input" placeholder="例如 C:\Users\HYC\Desktop\zidonghuashushipin\auto-video-player" />
+            <button id="scanBtn" class="btn primary">扫描项目</button>
+          </div>
+          <div id="scanInfo" class="hint"></div>
+        </div>
+
+        <div class="card" id="metaCard" style="display:none">
+          <div class="card-title">② 项目信息</div>
+          <div class="grid">
+            <label>显示名称<input id="m_displayName" class="input" /></label>
+            <label>仓库名 (repo)<input id="m_repo" class="input" /></label>
+            <label>一句话描述<input id="m_tagline" class="input" /></label>
+            <label>开源协议
+              <select id="m_license" class="input">
+                <option>MIT</option><option>Apache-2.0</option><option>GPL-3.0</option>
+                <option>BSD-3-Clause</option><option>MPL-2.0</option><option>Unlicense</option>
+              </select>
+            </label>
+            <label>GitHub 账号<input id="m_ghOwner" class="input" placeholder="留空则发布时自动获取" /></label>
+            <label>Gitee 账号<input id="m_gtOwner" class="input" placeholder="留空则发布时自动获取" /></label>
+          </div>
+          <label>核心功能（每行一条）
+            <textarea id="m_features" class="input area" rows="3"></textarea>
+          </label>
+          <label>Topics 标签（逗号分隔）
+            <input id="m_topics" class="input" placeholder="chrome-extension, video, autoplay" />
+          </label>
+          <div class="row">
+            <label class="check"><input type="checkbox" id="m_useAI" checked /> 使用 AI 生成 README/教程</label>
+            <button id="saveMetaBtn" class="btn">保存配置 (.opu.json)</button>
+          </div>
+          <div id="metaHint" class="hint"></div>
+        </div>
+
+        <div class="card" id="docCard" style="display:none">
+          <div class="card-title">③ 文档预览 / 编辑
+            <button id="genDocBtn" class="btn small">生成文档</button>
+          </div>
+          <div class="tabs">
+            <button class="tab active" data-doc="readme">README.md</button>
+            <button class="tab" data-doc="tutorial">TUTORIAL.md</button>
+            <button class="tab" data-doc="changelog">CHANGELOG.md</button>
+          </div>
+          <textarea id="docArea" class="input area code" rows="14"></textarea>
+          <div class="hint">提示：生成后可在此直接修改，发布时将使用你编辑后的内容。</div>
+        </div>
+
+        <div class="card" id="runCard" style="display:none">
+          <div class="card-title">④ 开始发布</div>
+          <div class="row">
+            <label class="check"><input type="checkbox" id="run_github" checked /> GitHub</label>
+            <label class="check"><input type="checkbox" id="run_gitee" checked /> Gitee</label>
+            <label class="check"><input type="checkbox" id="run_dryRun" /> 演练（不推送）</label>
+          </div>
+          <button id="publishBtn" class="btn primary big">🚀 一键发布</button>
+          <div id="logBox" class="logbox" style="display:none"></div>
+          <div id="resultBox" class="resultbox"></div>
+        </div>
+      </section>
+
+      <!-- 配置 -->
+      <section class="view" id="view-config">
+        <header class="view-head">
+          <h1>全局配置</h1>
+          <p>Token 与 AI Key 仅在你的电脑本地保存（~/.opu/config.json），不会上传。</p>
+        </header>
+
+        <div class="card">
+          <div class="card-title">平台令牌</div>
+          <div class="field">
+            <div class="field-head">
+              <span>GitHub Token</span>
+              <button class="btn small" data-test="tokens.github">测试连接</button>
+            </div>
+            <div class="row">
+              <input id="cfg_github" class="input" type="password" placeholder="ghp_xxx 或 github_pat_xxx" />
+              <button class="btn ghost" data-toggle="cfg_github">显示</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-head">
+              <span>Gitee 令牌</span>
+              <button class="btn small" data-test="tokens.gitee">测试连接</button>
+            </div>
+            <div class="row">
+              <input id="cfg_gitee" class="input" type="password" placeholder="私人令牌" />
+              <button class="btn ghost" data-toggle="cfg_gitee">显示</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">AI（DeepSeek）</div>
+          <div class="field">
+            <div class="field-head">
+              <span>API Key</span>
+              <button class="btn small" data-test="ai.apiKey">测试连接</button>
+            </div>
+            <div class="row">
+              <input id="cfg_aiKey" class="input" type="password" placeholder="sk-xxx" />
+              <button class="btn ghost" data-toggle="cfg_aiKey">显示</button>
+            </div>
+          </div>
+          <div class="grid">
+            <label>Base URL<input id="cfg_aiBase" class="input" value="https://api.deepseek.com" /></label>
+            <label>模型<input id="cfg_aiModel" class="input" value="deepseek-chat" /></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">著作权归属（应用到所有发布的项目）</div>
+          <div class="grid">
+            <label>著作权人<input id="cfg_holder" class="input" placeholder="如：胡昱晨" /></label>
+            <label>年份<input id="cfg_year" class="input" placeholder="如：2026" /></label>
+          </div>
+          <div class="hint">发布时自动写入 LICENSE 与 NOTICE 文件：作品可免费使用，但须保留你的署名、不得篡改或冒名。</div>
+        </div>
+
+        <button id="saveCfgBtn" class="btn primary">保存配置</button>
+        <div id="cfgHint" class="hint"></div>
+      </section>
+
+      <!-- 环境检查 -->
+      <section class="view" id="view-doctor">
+        <header class="view-head">
+          <h1>环境检查</h1>
+          <p>发布前确认 Git、令牌、AI 均可用。</p>
+        </header>
+        <button id="doctorBtn" class="btn primary">运行检查</button>
+        <div id="doctorList" class="doc-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
